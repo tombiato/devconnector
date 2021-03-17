@@ -1,5 +1,7 @@
 import express from 'express';
 import connectDB from './config/db.js';
+
+// Routers Imports
 import { router as usersRouter } from './routes/api/users.js';
 import { router as authRouter } from './routes/api/auth.js';
 import { router as profileRouter } from './routes/api/profile.js';
