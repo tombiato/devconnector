@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const ProfilSchema = new mongoose.Schema({
+const ProfileSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'user',
@@ -80,4 +80,4 @@ const ProfilSchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.model('Profil', ProfilSchema);
+export default mongoose.model('Profile', ProfileSchema);
