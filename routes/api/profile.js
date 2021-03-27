@@ -1,6 +1,8 @@
 import express from 'express';
+import config from 'config';
+import request from 'request';
 import auth from '../../middleware/auth.js';
-import { check, validationResult } from 'express-validator';
+import { body, check, validationResult } from 'express-validator';
 
 import Profile from '../../models/Profile.js';
 import User from '../../models/User.js';
@@ -314,6 +316,35 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 		await profile.save();
 
 		res.json(profile);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server Error...');
+	}
+});
+
+// @route   GET api/profile/github/:username
+// @desc    Get users repos from Github
+// @access  Public
+router.get('/github/:username', (req, res) => {
+	try {
+		const options = {
+			uri: `https://api.github.com/users/${
+				req.params.username
+			}/repos?per_page=5&sort=created:asc&client_id=${config.get(
+				'githubClientId'
+			)}&client_secret=${config.get('githubSecret')}`,
+			method: 'GET',
+			headers: { 'user-agent': 'node.js' },
+		};
+
+		request(options, (error, response, body) => {
+			if (error) console.error(error);
+
+			if (response.statusCode !== 200)
+				return res.status(404).json({ msg: 'No Github profile found' });
+
+			res.json(JSON.parse(body));
+		});
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server Error...');
